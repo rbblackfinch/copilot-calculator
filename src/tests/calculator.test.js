@@ -1,14 +1,17 @@
 /**
  * calculator.test.js - Unit tests for calculator.js
  *
- * Tests cover the four basic arithmetic operations:
- *   - add()      : Addition
- *   - subtract() : Subtraction
- *   - multiply() : Multiplication
- *   - divide()   : Division (including division by zero edge case)
+ * Tests cover all arithmetic operations:
+ *   - add()        : Addition
+ *   - subtract()   : Subtraction
+ *   - multiply()   : Multiplication
+ *   - divide()     : Division (including division by zero edge case)
+ *   - modulo()     : Modulo (including modulo by zero edge case)
+ *   - power()      : Exponentiation
+ *   - squareRoot() : Square root (including negative number edge case)
  */
 
-const { add, subtract, multiply, divide } = require('../calculator');
+const { add, subtract, multiply, divide, modulo, power, squareRoot } = require('../calculator');
 
 // ─── Addition ────────────────────────────────────────────────────────────────
 describe('add()', () => {
@@ -64,5 +67,57 @@ describe('divide()', () => {
   });
   test('division by zero with negative numerator returns an error message', () => {
     expect(divide(-10, 0)).toBe('Error: Division by zero is not allowed');
+  });
+});
+
+// ─── Modulo ───────────────────────────────────────────────────────────────────
+describe('modulo()', () => {
+  // Example from image: 5 % 2 = 1
+  test('5 % 2 = 1', () => expect(modulo(5, 2)).toBe(1));
+
+  test('returns zero when evenly divisible', () => expect(modulo(10, 5)).toBe(0));
+  test('modulo with larger divisor returns dividend', () => expect(modulo(3, 7)).toBe(3));
+  test('modulo with negative dividend', () => expect(modulo(-7, 3)).toBe(-1));
+  test('modulo with floating-point numbers', () => expect(modulo(5.5, 2)).toBeCloseTo(1.5));
+
+  // Edge case: modulo by zero
+  test('modulo by zero returns an error message', () => {
+    expect(modulo(5, 0)).toBe('Error: Modulo by zero is not allowed');
+  });
+  test('modulo by zero with negative numerator returns an error message', () => {
+    expect(modulo(-8, 0)).toBe('Error: Modulo by zero is not allowed');
+  });
+});
+
+// ─── Power ────────────────────────────────────────────────────────────────────
+describe('power()', () => {
+  // Example from image: 2 ^ 3 = 8
+  test('2 ^ 3 = 8', () => expect(power(2, 3)).toBe(8));
+
+  test('raises a number to the power of zero returns 1', () => expect(power(5, 0)).toBe(1));
+  test('raises a number to the power of one returns itself', () => expect(power(7, 1)).toBe(7));
+  test('raises a negative base to an even exponent yields positive', () => expect(power(-3, 2)).toBe(9));
+  test('raises a negative base to an odd exponent yields negative', () => expect(power(-2, 3)).toBe(-8));
+  test('fractional exponent (square root via power)', () => expect(power(9, 0.5)).toBeCloseTo(3));
+  test('large exponentiation', () => expect(power(2, 10)).toBe(1024));
+});
+
+// ─── Square Root ──────────────────────────────────────────────────────────────
+describe('squareRoot()', () => {
+  // Example from image: √16 = 4
+  test('√16 = 4', () => expect(squareRoot(16)).toBe(4));
+
+  test('square root of 25 = 5', () => expect(squareRoot(25)).toBe(5));
+  test('square root of 0 = 0', () => expect(squareRoot(0)).toBe(0));
+  test('square root of 1 = 1', () => expect(squareRoot(1)).toBe(1));
+  test('square root of 2 returns irrational number', () => expect(squareRoot(2)).toBeCloseTo(1.4142));
+  test('square root of 9 = 3', () => expect(squareRoot(9)).toBe(3));
+
+  // Edge case: negative input
+  test('square root of a negative number returns an error message', () => {
+    expect(squareRoot(-1)).toBe('Error: Square root of a negative number is not allowed');
+  });
+  test('square root of a large negative number returns an error message', () => {
+    expect(squareRoot(-100)).toBe('Error: Square root of a negative number is not allowed');
   });
 });
